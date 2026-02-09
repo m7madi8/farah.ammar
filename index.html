@@ -12,6 +12,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="i18n.js"></script>
+  <script src="cart.js"></script>
 </head>
 <body>
   <div class="page-loader" id="pageLoader">
@@ -28,10 +29,43 @@
         <button type="button" class="nav-lang-toggle" id="navLangToggle" aria-label="Switch to Arabic" title="العربية">
           <i class="bi bi-translate" aria-hidden="true"></i>
         </button>
-        <a class="nav-order" href="#product" data-i18n="nav.order">Order</a>
+        <button type="button" class="nav-cart" id="navCart" aria-label="Cart" aria-expanded="false" aria-haspopup="true">
+          <i class="bi bi-cart3" aria-hidden="true"></i>
+          <span class="nav-cart-badge" id="cartBadge" aria-hidden="true">0</span>
+        </button>
       </div>
     </div>
   </nav>
+
+  <!-- Cart dropdown -->
+  <div class="cart-panel" id="cartPanel" role="dialog" aria-label="Shopping cart">
+    <div class="cart-panel-inner">
+      <div class="cart-panel-header">
+        <h3 class="cart-panel-title" data-i18n="cart.title">Your cart</h3>
+        <button type="button" class="cart-panel-close" id="cartClose" aria-label="Close cart"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="cart-panel-list" id="cartList">
+        <!-- Cart items rendered by JS -->
+      </div>
+      <div class="cart-panel-empty" id="cartEmpty">
+        <i class="bi bi-cart-x"></i>
+        <p data-i18n="cart.empty">Your cart is empty</p>
+      </div>
+      <div class="cart-panel-footer" id="cartFooter" hidden>
+        <div class="cart-panel-total">
+          <span data-i18n="cart.total">Total</span>
+          <span id="cartTotal">0 ₪</span>
+        </div>
+        <a href="#" class="cart-panel-order cart-panel-pay-visa" id="cartPayVisaBtn"><i class="bi bi-credit-card-2-front"></i> <span data-i18n="cart.payVisa">Pay by Visa / Mastercard</span></a>
+        <a href="#" class="cart-panel-order" id="cartOrderBtn"><span data-i18n="cart.orderViaWa">Cash on delivery</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-toast" id="cartToast" role="status" aria-live="polite" aria-hidden="true">
+    <i class="bi bi-check-circle-fill cart-toast-icon"></i>
+    <span class="cart-toast-text" data-i18n="cart.added">Added to cart!</span>
+  </div>
 
   <main>
     <!-- Hero: full viewport -->
@@ -53,14 +87,15 @@
       <div class="shop-wrap">
         <header class="shop-header anim-on-scroll">
           <h2 class="shop-title" data-i18n="shop.title">Shop</h2>
-          <p class="shop-sub" data-i18n="shop.sub">Artisan sweets & gifts, crafted by Chef Farah</p>
+          <p class="shop-sub" data-i18n="shop.sub">Signature bites, bold sauces & the perfect finish — crafted by Chef Farah</p>
         </header>
 
         <div class="shop-toolbar anim-on-scroll">
           <div class="shop-filters">
             <button type="button" class="shop-filter-btn active" data-filter="all" data-label="All" data-label-ar="الكل" aria-pressed="true" data-i18n="filter.all">All</button>
-            <button type="button" class="shop-filter-btn" data-filter="boxes" data-label="Dessert Boxes" data-label-ar="صناديق الحلويات" data-i18n="filter.boxes">Dessert Boxes</button>
-            <button type="button" class="shop-filter-btn" data-filter="gifts" data-label="Gifts" data-label-ar="الهدايا" data-i18n="filter.gifts">Gifts</button>
+            <button type="button" class="shop-filter-btn" data-filter="boxes" data-label="Nana's Bites" data-label-ar="صناديق الحلويات" data-i18n="filter.boxes">Nana's Bites</button>
+            <button type="button" class="shop-filter-btn" data-filter="sauces" data-label="Sauces" data-label-ar="الصوص" data-i18n="filter.sauces">Sauces</button>
+            <button type="button" class="shop-filter-btn" data-filter="chopsticks" data-label="Chop sticks" data-label-ar="عيدان الطعام">Chop sticks</button>
           </div>
           <div class="shop-sort">
             <label for="shopSort" class="shop-sort-label" data-i18n="sort.label">Sort by</label>
@@ -72,115 +107,141 @@
           </div>
         </div>
 
+        <p class="shop-swipe-hint" data-i18n="shop.swipeHint">Swipe to see more products</p>
         <div class="shop-grid" id="shopGrid">
-          <a href="product.html" class="product-preview anim-on-scroll" data-category="boxes" data-price="120">
-            <div class="product-preview-image">
-              <img src="1.png" alt="Nana's Bites – Signature Dumplings" width="400" height="300" loading="lazy" decoding="async">
-              <span class="product-preview-badge" data-i18n="product.badge">Signature</span>
-            </div>
-            <div class="product-preview-body">
-              <h3 class="product-preview-title" data-i18n="product.cardTitle">Nana's Bites – Signature Dumplings</h3>
-              <div class="product-preview-price-wrap">
-                <span class="product-preview-price">120</span>
-                <span class="product-preview-currency">₪</span>
+          <div class="product-preview product-preview-card anim-on-scroll" data-category="boxes" data-price="25">
+            <div class="product-preview-link">
+              <div class="product-preview-image">
+                <img src="1.png" alt="Signature Dumplings – Chicken" width="400" height="300" loading="lazy" decoding="async">
+                <span class="product-preview-badge" data-i18n="product.badge">Signature</span>
               </div>
-              <p class="product-preview-desc" data-i18n="product.cardDesc">Handcrafted dumplings with rich flavors, wrapped to perfection. Created by Chef Farah Ammar for moments worth savoring.</p>
-              <span class="product-preview-cta">
-                <span data-i18n="product.viewProduct">View product</span>
-                <i class="bi bi-arrow-right" aria-hidden="true"></i>
-              </span>
+              <div class="product-preview-body">
+                <h3 class="product-preview-title" data-i18n="product.dumplingsChickenTitle">Signature Dumplings – Chicken</h3>
+                <div class="product-preview-price-wrap">
+                  <span class="product-preview-price">25</span>
+                  <span class="product-preview-currency">₪</span>
+                </div>
+                <p class="product-preview-desc" data-i18n="product.dumplingsChickenDesc">Handcrafted chicken dumplings with rich flavors. Created by Chef Farah.</p>
+                <a href="product-dumplings-chicken.html" class="product-preview-cta">
+                  <span data-i18n="product.viewProduct">View product</span>
+                  <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+              </div>
             </div>
-          </a>
+            <button type="button" class="product-preview-add-cart" data-cart-name="Signature Dumplings – Chicken" data-cart-price="25"><i class="bi bi-cart-plus"></i> <span data-i18n="product.addToCart">Add to cart</span></button>
+          </div>
 
-          <a href="product.html" class="product-preview anim-on-scroll" data-category="gifts" data-price="25">
-            <div class="product-preview-image">
-              <img src="1.png" alt="Teriyaki sauce" width="400" height="300" loading="lazy" decoding="async">
-            </div>
-            <div class="product-preview-body">
-              <h3 class="product-preview-title">Teriyaki sauce</h3>
-              <div class="product-preview-price-wrap">
-                <span class="product-preview-price">25</span>
-                <span class="product-preview-currency">₪</span>
+          <div class="product-preview product-preview-card anim-on-scroll" data-category="boxes" data-price="27">
+            <div class="product-preview-link">
+              <div class="product-preview-image">
+                <img src="1.png" alt="Signature Dumplings – Meat" width="400" height="300" loading="lazy" decoding="async">
+                <span class="product-preview-badge" data-i18n="product.badge">Signature</span>
               </div>
-              <p class="product-preview-desc">Rich teriyaki glaze, perfect for dumplings and stir-fry.</p>
-              <span class="product-preview-cta">
-                <span data-i18n="product.viewProduct">View product</span>
-                <i class="bi bi-arrow-right" aria-hidden="true"></i>
-              </span>
+              <div class="product-preview-body">
+                <h3 class="product-preview-title" data-i18n="product.dumplingsMeatTitle">Signature Dumplings – Meat</h3>
+                <div class="product-preview-price-wrap">
+                  <span class="product-preview-price">27</span>
+                  <span class="product-preview-currency">₪</span>
+                </div>
+                <p class="product-preview-desc" data-i18n="product.dumplingsMeatDesc">Handcrafted meat dumplings with rich flavors. Created by Chef Farah.</p>
+                <a href="product-dumplings-meat.html" class="product-preview-cta">
+                  <span data-i18n="product.viewProduct">View product</span>
+                  <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+              </div>
             </div>
-          </a>
+            <button type="button" class="product-preview-add-cart" data-cart-name="Signature Dumplings – Meat" data-cart-price="27"><i class="bi bi-cart-plus"></i> <span data-i18n="product.addToCart">Add to cart</span></button>
+          </div>
 
-          <a href="product.html" class="product-preview anim-on-scroll" data-category="gifts" data-price="25">
-            <div class="product-preview-image">
-              <img src="1.png" alt="Soya sauce" width="400" height="300" loading="lazy" decoding="async">
-            </div>
-            <div class="product-preview-body">
-              <h3 class="product-preview-title">Soya sauce</h3>
-              <div class="product-preview-price-wrap">
-                <span class="product-preview-price">25</span>
-                <span class="product-preview-currency">₪</span>
+          <div class="product-preview product-preview-card anim-on-scroll" data-category="sauces" data-price="2">
+            <div class="product-preview-link">
+              <div class="product-preview-image">
+                <img src="Teriyaki .jpeg" alt="Teriyaki sauce" width="400" height="300" loading="lazy" decoding="async">
+                <span class="product-preview-badge" data-i18n="product.badgeSauce">Sauce</span>
               </div>
-              <p class="product-preview-desc">Classic soy sauce for dipping and cooking.</p>
-              <span class="product-preview-cta">
-                <span data-i18n="product.viewProduct">View product</span>
-                <i class="bi bi-arrow-right" aria-hidden="true"></i>
-              </span>
+              <div class="product-preview-body">
+                <h3 class="product-preview-title">Teriyaki sauce</h3>
+                <div class="product-preview-price-wrap">
+                  <span class="product-preview-price">2</span>
+                  <span class="product-preview-currency">₪</span>
+                </div>
+                <p class="product-preview-desc">Rich teriyaki glaze, perfect for dumplings and stir-fry.</p>
+              </div>
             </div>
-          </a>
+            <button type="button" class="product-preview-add-cart" data-cart-name="Teriyaki sauce" data-cart-price="2"><i class="bi bi-cart-plus"></i> <span data-i18n="product.addToCart">Add to cart</span></button>
+          </div>
 
-          <a href="product.html" class="product-preview anim-on-scroll" data-category="gifts" data-price="28">
-            <div class="product-preview-image">
-              <img src="1.png" alt="Buffalo sauce" width="400" height="300" loading="lazy" decoding="async">
-            </div>
-            <div class="product-preview-body">
-              <h3 class="product-preview-title">Buffalo sauce</h3>
-              <div class="product-preview-price-wrap">
-                <span class="product-preview-price">28</span>
-                <span class="product-preview-currency">₪</span>
+          <div class="product-preview product-preview-card anim-on-scroll" data-category="sauces" data-price="2">
+            <div class="product-preview-link">
+              <div class="product-preview-image">
+                <img src="soya .jpeg" alt="Soya sauce" width="400" height="300" loading="lazy" decoding="async">
+                <span class="product-preview-badge" data-i18n="product.badgeSauce">Sauce</span>
               </div>
-              <p class="product-preview-desc">Spicy buffalo sauce for a bold kick.</p>
-              <span class="product-preview-cta">
-                <span data-i18n="product.viewProduct">View product</span>
-                <i class="bi bi-arrow-right" aria-hidden="true"></i>
-              </span>
+              <div class="product-preview-body">
+                <h3 class="product-preview-title">Soya sauce</h3>
+                <div class="product-preview-price-wrap">
+                  <span class="product-preview-price">2</span>
+                  <span class="product-preview-currency">₪</span>
+                </div>
+                <p class="product-preview-desc">Classic soy sauce for dipping and cooking.</p>
+              </div>
             </div>
-          </a>
+            <button type="button" class="product-preview-add-cart" data-cart-name="Soya sauce" data-cart-price="2"><i class="bi bi-cart-plus"></i> <span data-i18n="product.addToCart">Add to cart</span></button>
+          </div>
 
-          <a href="product.html" class="product-preview anim-on-scroll" data-category="gifts" data-price="26">
-            <div class="product-preview-image">
-              <img src="1.png" alt="Sweet chili sauce" width="400" height="300" loading="lazy" decoding="async">
-            </div>
-            <div class="product-preview-body">
-              <h3 class="product-preview-title">Sweet chili sauce</h3>
-              <div class="product-preview-price-wrap">
-                <span class="product-preview-price">26</span>
-                <span class="product-preview-currency">₪</span>
+          <div class="product-preview product-preview-card anim-on-scroll" data-category="sauces" data-price="2">
+            <div class="product-preview-link">
+              <div class="product-preview-image">
+                <img src="Buffalo .jpeg" alt="Buffalo sauce" width="400" height="300" loading="lazy" decoding="async">
+                <span class="product-preview-badge" data-i18n="product.badgeSauce">Sauce</span>
               </div>
-              <p class="product-preview-desc">Sweet and tangy chili sauce for dipping.</p>
-              <span class="product-preview-cta">
-                <span data-i18n="product.viewProduct">View product</span>
-                <i class="bi bi-arrow-right" aria-hidden="true"></i>
-              </span>
+              <div class="product-preview-body">
+                <h3 class="product-preview-title">Buffalo sauce</h3>
+                <div class="product-preview-price-wrap">
+                  <span class="product-preview-price">2</span>
+                  <span class="product-preview-currency">₪</span>
+                </div>
+                <p class="product-preview-desc">Spicy buffalo sauce for a bold kick.</p>
+              </div>
             </div>
-          </a>
+            <button type="button" class="product-preview-add-cart" data-cart-name="Buffalo sauce" data-cart-price="2"><i class="bi bi-cart-plus"></i> <span data-i18n="product.addToCart">Add to cart</span></button>
+          </div>
 
-          <a href="product.html" class="product-preview anim-on-scroll" data-category="gifts" data-price="15">
-            <div class="product-preview-image">
-              <img src="1.png" alt="Chop sticks" width="400" height="300" loading="lazy" decoding="async">
-            </div>
-            <div class="product-preview-body">
-              <h3 class="product-preview-title">Chop sticks</h3>
-              <div class="product-preview-price-wrap">
-                <span class="product-preview-price">15</span>
-                <span class="product-preview-currency">₪</span>
+          <div class="product-preview product-preview-card anim-on-scroll" data-category="sauces" data-price="2">
+            <div class="product-preview-link">
+              <div class="product-preview-image">
+                <img src="Sweet-chili.jpeg" alt="Sweet chili sauce" width="400" height="300" loading="lazy" decoding="async">
+                <span class="product-preview-badge" data-i18n="product.badgeSauce">Sauce</span>
               </div>
-              <p class="product-preview-desc">Reusable chopsticks for the full experience.</p>
-              <span class="product-preview-cta">
-                <span data-i18n="product.viewProduct">View product</span>
-                <i class="bi bi-arrow-right" aria-hidden="true"></i>
-              </span>
+              <div class="product-preview-body">
+                <h3 class="product-preview-title">Sweet chili sauce</h3>
+                <div class="product-preview-price-wrap">
+                  <span class="product-preview-price">2</span>
+                  <span class="product-preview-currency">₪</span>
+                </div>
+                <p class="product-preview-desc">Sweet and tangy chili sauce for dipping.</p>
+              </div>
             </div>
-          </a>
+            <button type="button" class="product-preview-add-cart" data-cart-name="Sweet chili sauce" data-cart-price="2"><i class="bi bi-cart-plus"></i> <span data-i18n="product.addToCart">Add to cart</span></button>
+          </div>
+
+          <div class="product-preview product-preview-card anim-on-scroll" data-category="chopsticks" data-price="1">
+            <div class="product-preview-link">
+              <div class="product-preview-image">
+                <img src="Chop-sticks.jpeg" alt="Chop sticks" width="400" height="300" loading="lazy" decoding="async">
+                <span class="product-preview-badge" data-i18n="product.badgeAccessory">Accessory</span>
+              </div>
+              <div class="product-preview-body">
+                <h3 class="product-preview-title">Chop sticks</h3>
+                <div class="product-preview-price-wrap">
+                  <span class="product-preview-price">1</span>
+                  <span class="product-preview-currency">₪</span>
+                </div>
+                <p class="product-preview-desc product-preview-chop-note" data-i18n="product.chopsticksNote">1 ₪ per stick (not per pack).</p>
+              </div>
+            </div>
+            <button type="button" class="product-preview-add-cart" data-cart-name="Chop sticks" data-cart-price="1"><i class="bi bi-cart-plus"></i> <span data-i18n="product.addToCart">Add to cart</span></button>
+          </div>
         </div>
 
         <div class="shop-empty" id="shopEmpty" aria-live="polite" hidden>
