@@ -1251,6 +1251,26 @@ section[id] { scroll-margin-top: 0; }
   color: rgba(242,227,225,0.55);
 }
 
+.footer-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--soft-pink);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.footer-instagram i {
+  font-size: 1.35rem;
+}
+.footer-instagram:hover {
+  color: var(--off-white);
+  transform: translateY(-2px);
+}
+
 /* —— Cookie consent —— */
 .cookie-consent {
   position: fixed;
