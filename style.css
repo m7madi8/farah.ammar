@@ -607,7 +607,6 @@ section[id] { scroll-margin-top: 0; }
 /* —— Shop section —— */
 .block-product {
   position: relative;
-  background: linear-gradient(165deg, var(--off-white) 0%, var(--soft-pink) 50%, var(--off-white) 100%);
   padding: 4rem 0 5rem;
 }
 
@@ -963,7 +962,7 @@ section[id] { scroll-margin-top: 0; }
   .shop-filters { justify-content: center; }
   .shop-sort { justify-content: center; }
 
-  /* Horizontal scroll for product cards on mobile */
+  /* Horizontal scroll: الكرت يظهر بالمنتصف عند التمرير */
   .shop-grid {
     display: flex;
     flex-direction: row;
@@ -973,18 +972,22 @@ section[id] { scroll-margin-top: 0; }
     scrollbar-width: none;
     -ms-overflow-style: none;
     gap: 1rem;
-    padding: 0.25rem max(1.5rem, env(safe-area-inset-left)) 1rem max(1.5rem, env(safe-area-inset-right));
+    padding: 0.25rem calc(50vw - 35vw) 1rem;
+    padding-left: max(calc(50vw - 35vw), env(safe-area-inset-left));
+    padding-right: max(calc(50vw - 35vw), env(safe-area-inset-right));
     margin: 0;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     align-items: stretch;
     grid-template-columns: unset;
+    scroll-padding-inline: calc(50vw - 35vw);
   }
   .product-preview {
     flex: 0 0 auto;
+    width: 70vw;
     min-width: 220px;
-    max-width: 72vw;
-    scroll-snap-align: start;
+    max-width: 70vw;
+    scroll-snap-align: center;
   }
   .product-preview-body { padding: 1rem 0.9rem; }
   .product-preview-title { font-size: 1.05rem; line-height: 1.2; }
@@ -1009,11 +1012,22 @@ section[id] { scroll-margin-top: 0; }
 
 @media (min-width: 768px) {
   .shop-swipe-hint { display: none; }
+  /* الشاشات أكبر من الهواتف: الكرت يأخذ 60% من العرض ويكون بالمنتصف */
+  .shop-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    justify-content: center;
+  }
+  .product-preview {
+    width: 70vw;
+    max-width: 70vw;
+    margin: 0 auto;
+  }
 }
 
 @media (max-width: 479.98px) {
   .shop-grid { max-width: none; margin: 0; gap: 0.75rem; }
-  .product-preview { min-width: 190px; max-width: 68vw; }
+  .product-preview { min-width: 190px; max-width: 70vw; }
   .product-preview-body { padding: 0.85rem 0.75rem; }
   .product-preview-title { font-size: 0.95rem; }
   .product-preview-price { font-size: 1.9rem !important; }
