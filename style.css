@@ -1012,17 +1012,23 @@ section[id] { scroll-margin-top: 0; }
 
 @media (min-width: 768px) {
   .shop-swipe-hint { display: none; }
-  /* الشاشات أكبر من الهواتف: الكرت يأخذ 60% من العرض ويكون بالمنتصف */
+  /* آيباد وشاشات متوسطة: كروت أكبر شوي */
   .shop-grid {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    justify-items: stretch;
+    max-width: 100%;
   }
   .product-preview {
-    width: 70vw;
-    max-width: 70vw;
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
   }
+  .product-preview-body { padding: 1.1rem 1.1rem; }
+  .product-preview-title { font-size: 1.2rem; }
+  .product-preview-price { font-size: 2.15rem !important; }
+  .product-preview-desc { font-size: 0.88rem; }
+  .product-preview-cta { font-size: 0.88rem; }
+  .product-preview-image { aspect-ratio: 4 / 5; }
 }
 
 @media (max-width: 479.98px) {
@@ -1033,6 +1039,22 @@ section[id] { scroll-margin-top: 0; }
   .product-preview-price { font-size: 1.9rem !important; }
   .product-preview-desc { font-size: 0.75rem; }
   .product-preview-cta { font-size: 0.75rem; }
+  .product-preview-image { aspect-ratio: 4 / 5; }
+}
+
+/* شاشات كبيرة: كروت أكبر شوي */
+@media (min-width: 1024px) {
+  .shop-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.1rem;
+  }
+  .product-preview-body { padding: 1rem 1rem; }
+  .product-preview-title { font-size: 1.15rem; }
+  .product-preview-price { font-size: 2rem !important; }
+  .product-preview-currency { font-size: 1.35rem !important; }
+  .product-preview-desc { font-size: 0.85rem; line-height: 1.5; }
+  .product-preview-cta { font-size: 0.85rem; }
+  .product-preview-badge { font-size: 0.62rem; padding: 0.32rem 0.55rem; }
   .product-preview-image { aspect-ratio: 4 / 5; }
 }
 
