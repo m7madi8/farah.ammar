@@ -4,7 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Chef Farah Ammar</title>
-  <link rel="icon" href="logo.png" type="image/png">
+  <!-- صورة المعاينة عند مشاركة الرابط (واتساب، فيسبوك، تويتر) — الرابط يُحدَّث تلقائياً من عنوان الصفحة على GitHub Pages -->
+  <meta property="og:image" content="logo2.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="">
+  <meta property="og:title" content="Farah Ammar">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="logo2.png">
+  <script>
+    (function() {
+      var base = location.origin + location.pathname.replace(/[^/]*$/, '');
+      var img = base + 'logo2.png';
+      var pageUrl = location.origin + location.pathname.replace(/[^/]*$/, '') || location.href;
+      document.querySelector('meta[property="og:image"]').setAttribute('content', img);
+      document.querySelector('meta[property="og:url"]').setAttribute('content', pageUrl);
+      document.querySelector('meta[name="twitter:image"]').setAttribute('content', img);
+    })();
+  </script>
+  <link rel="icon" href="logo1.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=El+Messiri:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +36,7 @@
 <body>
   <div class="page-loader" id="pageLoader">
     <div class="loader-inner">
-      <img src="logo.png" alt="Farah Ammar" class="loader-logo" width="220" height="110" decoding="async">
+      <img src="logo1.png" alt="Farah Ammar" class="loader-logo" width="220" height="110" decoding="async">
       <div class="loader-bar"><span class="loader-bar-fill"></span></div>
     </div>
   </div>
@@ -72,7 +91,7 @@
     <section class="hero-full" id="hero">
       <div class="hero-bg"></div>
       <div class="hero-content">
-        <img src="logo.png" alt="Farah Ammar" class="hero-logo anim-fade-up" width="400" height="200" decoding="async">
+        <img src="logo1.png" alt="Farah Ammar" class="hero-logo anim-fade-up" width="400" height="200" decoding="async">
         <p class="hero-tagline anim-fade-up" data-i18n="hero.tagline">Tasting the world, One bite at a time.</p>
         <a href="#product" class="hero-cta anim-fade-up" data-i18n="hero.cta">Explore the Collection</a>
       </div>
