@@ -608,12 +608,21 @@ section[id] { scroll-margin-top: 0; }
 .block-product {
   position: relative;
   background: linear-gradient(165deg, var(--off-white) 0%, var(--soft-pink) 50%, var(--off-white) 100%);
-  padding: 4rem 1.5rem 5rem;
+  padding: 4rem 0 5rem;
 }
 
-.shop-wrap { max-width: 1100px; margin: 0 auto; }
+.shop-wrap {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
 
-.shop-header { text-align: center; margin-bottom: 2.25rem; }
+.shop-header {
+  text-align: center;
+  margin-bottom: 2.25rem;
+  padding: 0 max(1.5rem, env(safe-area-inset-left)) 0 max(1.5rem, env(safe-area-inset-right));
+}
 
 .shop-title {
   font-family: var(--font-display);
@@ -633,7 +642,7 @@ section[id] { scroll-margin-top: 0; }
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 2rem;
-  padding: 0 0.25rem;
+  padding: 0 max(1.5rem, env(safe-area-inset-left)) 0 max(1.5rem, env(safe-area-inset-right));
 }
 
 .shop-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -691,9 +700,10 @@ section[id] { scroll-margin-top: 0; }
 
 .shop-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
   align-items: stretch;
+  padding: 0 max(1.5rem, env(safe-area-inset-left)) 0 max(1.5rem, env(safe-area-inset-right));
 }
 
 /* —— Product card —— */
@@ -899,7 +909,7 @@ section[id] { scroll-margin-top: 0; }
   background: var(--off-white);
   border-radius: 1.25rem;
   border: 1px dashed rgba(122,92,142,0.3);
-  margin-top: 1rem;
+  margin: 1rem max(1.5rem, env(safe-area-inset-left)) 0 max(1.5rem, env(safe-area-inset-right));
 }
 
 .shop-empty[hidden] { display: none !important; }
@@ -963,10 +973,8 @@ section[id] { scroll-margin-top: 0; }
     scrollbar-width: none;
     -ms-overflow-style: none;
     gap: 1rem;
-    padding: 0.25rem 0 1rem;
-    margin: 0 -1rem;
-    padding-left: max(1rem, env(safe-area-inset-left));
-    padding-right: max(1rem, env(safe-area-inset-right));
+    padding: 0.25rem max(1.5rem, env(safe-area-inset-left)) 1rem max(1.5rem, env(safe-area-inset-right));
+    margin: 0;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     align-items: stretch;
@@ -994,6 +1002,7 @@ section[id] { scroll-margin-top: 0; }
     font-size: 0.8rem;
     color: var(--lavender);
     margin: 0 0 1rem;
+    padding: 0 max(1.5rem, env(safe-area-inset-left)) 0 max(1.5rem, env(safe-area-inset-right));
     letter-spacing: 0.04em;
   }
 }
@@ -1393,9 +1402,8 @@ section[id] { scroll-margin-top: 0; }
 
   /* Shop section */
   .block-product {
-    padding: 2.5rem max(1rem, env(safe-area-inset-left)) max(1rem, env(safe-area-inset-right)) 3.5rem;
+    padding: 2.5rem 0 3.5rem;
   }
-  .shop-wrap { padding: 0 0.25rem; }
   .shop-header { margin-bottom: 1.5rem; }
   .shop-title { font-size: 1.7rem; }
   .shop-sub { font-size: 0.9rem; }
@@ -1460,6 +1468,18 @@ section[id] { scroll-margin-top: 0; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* تأثير كتابي ناعم وسلس — كأن النص يظهر على الورق */
+@keyframes heroTaglineTextMotion {
+  0%, 100% {
+    opacity: 0.92;
+    filter: blur(0.4px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
 @keyframes fadeDown {
   from { opacity: 0; transform: translateY(-16px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1469,7 +1489,10 @@ section[id] { scroll-margin-top: 0; }
 .hero-cta.anim-fade-up { opacity: 0; animation: fadeUp 0.7s ease-out 0.6s forwards; }
 .hero-byline.anim-fade-up { opacity: 0; animation: fadeUp 0.8s ease-out 0.15s forwards; }
 .hero-title.anim-fade-up { opacity: 0; animation: fadeUp 0.9s ease-out 0.3s forwards; }
-.hero-tagline.anim-fade-up { opacity: 0; animation: fadeUp 0.8s ease-out 0.5s forwards; }
+.hero-tagline.anim-fade-up {
+  opacity: 0;
+  animation: fadeUp 0.8s ease-out 0.5s forwards, heroTaglineTextMotion 4s ease-in-out 1.3s infinite;
+}
 .hero-subtext.anim-fade-up { opacity: 0; animation: fadeUp 0.8s ease-out 0.58s forwards; }
 .hero-scroll.anim-fade { opacity: 0; animation: fadeIn 0.8s ease-out 1s forwards; }
 .nav-minimal.anim-fade-down { animation: fadeDown 0.6s ease-out; }
