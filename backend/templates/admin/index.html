@@ -1,0 +1,47 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+{% if analytics %}
+<div class="dashboard-analytics" style="margin-bottom: 2rem;">
+  <h2>{% trans "Analytics" %}</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #dee2e6;">
+      <strong>{% trans "Sales today" %}</strong>
+      <div style="font-size: 1.25rem;">{{ analytics.sales_daily|floatformat:2 }} ILS</div>
+    </div>
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #dee2e6;">
+      <strong>{% trans "Sales (7 days)" %}</strong>
+      <div style="font-size: 1.25rem;">{{ analytics.sales_weekly|floatformat:2 }} ILS</div>
+    </div>
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #dee2e6;">
+      <strong>{% trans "Sales (this month)" %}</strong>
+      <div style="font-size: 1.25rem;">{{ analytics.sales_monthly|floatformat:2 }} ILS</div>
+    </div>
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #dee2e6;">
+      <strong>{% trans "Total sales" %}</strong>
+      <div style="font-size: 1.25rem;">{{ analytics.total_sales_all|floatformat:2 }} ILS</div>
+    </div>
+    <div style="background: #e7f3ff; padding: 1rem; border-radius: 8px; border: 1px solid #b6d4fe;">
+      <strong>{% trans "Active orders" %}</strong>
+      <div style="font-size: 1.25rem;">{{ analytics.active_orders_count }}</div>
+    </div>
+    <div style="background: #f0e6ff; padding: 1rem; border-radius: 8px; border: 1px solid #d4c4f0;">
+      <strong>{% trans "Coupons used" %}</strong>
+      <div style="font-size: 1.25rem;">{{ analytics.coupons_uses_total }} ({{ analytics.orders_with_coupon }} orders)</div>
+    </div>
+  </div>
+  {% if analytics.best_sellers %}
+  <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #dee2e6; max-width: 500px;">
+    <strong>{% trans "Best-selling products" %}</strong>
+    <ul style="margin: 0.5rem 0 0 1rem;">
+      {% for item in analytics.best_sellers %}
+      <li>{{ item.product__name_en|default:"—" }}: {{ item.total_qty }} sold</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{{ block.super }}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Nana's Bites Admin" %}{% endblock %}
+
+{% block extrahead %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @media (max-width: 768px) {
+    .dashboard-analytics div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+  }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{% trans "Nana's Bites Admin" %}</a></h1>
+{% endblock %}

@@ -1,0 +1,9 @@
+Django>=4.2,<5.1
+djangorestframework>=3.14,<4.0
+django-cors-headers>=4.3,<5
+psycopg[binary]>=3.1,<4
+django-filter>=23.5,<24
+stripe>=7.0,<9
+djangorestframework-simplejwt>=5.3,<6
+gunicorn>=21.0,<23
+sentry-sdk[django]>=1.39,<3
