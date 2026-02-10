@@ -1,5 +1,5 @@
 """
-Gunicorn config for Nana's Bites backend.
+Gunicorn config for Chef Farah Ammar backend.
 Run: gunicorn config.wsgi:application -c gunicorn.conf.py
 """
 import os

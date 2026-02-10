@@ -1,5 +1,5 @@
 /**
- * API service for Nana's Bites store.
+ * API service for Chef Farah Ammar store.
  * All product, cart, and order data should come from REST endpoints.
  * Set VITE_API_BASE in .env (e.g. https://api.example.com) or leave empty for mock.
  */
@@ -31,13 +31,55 @@ async function request(path, options = {}) {
   return res.json();
 }
 
+function toFilterCategory(value) {
+  if (value == null || value === '') return '';
+  const s = String(value).trim().toLowerCase();
+  if (s === 'boxes' || s === 'dumplings' || s === 'box') return 'boxes';
+  if (s === 'sauces' || s === 'sauce') return 'sauces';
+  if (s === 'chopsticks' || s === 'chop-sticks' || s === 'chop_sticks') return 'chopsticks';
+  return '';
+}
+
+function inferCategoryFromProduct(p) {
+  const raw = p.category ?? p.categories?.[0]?.category?.slug ?? p.categories?.[0]?.slug ?? (typeof p.categories?.[0]?.category === 'string' ? p.categories[0].category : '');
+  const fromSlug = toFilterCategory(typeof raw === 'string' ? raw : (raw?.slug != null ? String(raw.slug) : ''));
+  if (fromSlug) return fromSlug;
+  const slug = (p.slug || '').toLowerCase();
+  const badge = (p.badge || '').toLowerCase();
+  if (slug.includes('sauce') || badge.includes('sauce')) return 'sauces';
+  if (slug.includes('chop') || slug.includes('stick')) return 'chopsticks';
+  return 'boxes';
+}
+
+function normalizeProduct(p) {
+  const category = inferCategoryFromProduct(p);
+  const heroImg = p.hero_image ?? p.images?.find((i) => i.is_hero) ?? p.images?.[0];
+  const imageUrl = typeof heroImg === 'string' ? heroImg : (heroImg?.url ?? p.imageUrl);
+  return {
+    ...p,
+    name: p.name ?? p.name_en,
+    nameAr: p.nameAr ?? p.name_ar,
+    description: p.description ?? p.description_en,
+    descriptionAr: p.descriptionAr ?? p.description_ar,
+    imageUrl: imageUrl ?? p.imageUrl,
+    order: p.order ?? p.sort_order ?? 0,
+    category,
+  };
+}
+
 /**
- * Fetch all products. Returns mock data when VITE_API_BASE is not set.
+ * Fetch all products. Uses mock when VITE_API_BASE not set, or when API fails/returns empty.
+ * Each product gets .category = 'boxes' | 'sauces' | 'chopsticks' for filtering.
  */
 export async function fetchProducts() {
-  if (!BASE) return MOCK_PRODUCTS;
-  const data = await request('/products');
-  return Array.isArray(data) ? data : (data?.products || MOCK_PRODUCTS);
+  if (!BASE) return MOCK_PRODUCTS.map(normalizeProduct);
+  try {
+    const data = await request('/products');
+    const raw = Array.isArray(data) ? data : (data?.results ?? data?.products ?? []);
+    const list = Array.isArray(raw) ? raw : [];
+    if (list.length > 0) return list.map(normalizeProduct);
+  } catch (_) { /* API failed: fall back to mock */ }
+  return MOCK_PRODUCTS.map(normalizeProduct);
 }
 
 /**

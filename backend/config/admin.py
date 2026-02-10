@@ -1,6 +1,7 @@
 """
-Custom AdminSite for Nana's Bites: admin-only access (role admin/super_admin),
+Custom AdminSite for Chef Farah Ammar: admin-only access (role admin/super_admin),
 analytics on index page, production-ready dashboard.
+Import of orders.models is deferred to avoid circular import with app admins.
 """
 from django.contrib import admin
 from django.contrib.admin import AdminSite
@@ -10,16 +11,16 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from decimal import Decimal
 
-from orders.models import Order, OrderItem, Coupon
-
 
 class NanaBitesAdminSite(AdminSite):
-    site_header = "Nana's Bites Admin"
-    site_title = "Nana's Bites"
-    index_title = "Dashboard"
+    site_header = "Chef Farah Ammar"
+    site_title = "Chef Farah Ammar"
+    index_title = "لوحة التحكم"
 
     def get_analytics(self):
         """Aggregate stats for dashboard: sales, best-sellers, active orders, coupons."""
+        from orders.models import Order, OrderItem, Coupon
+
         now = timezone.now()
         # Sales totals (paid/delivered/shipped/processing count as revenue)
         revenue_statuses = ['paid', 'processing', 'shipped', 'delivered']

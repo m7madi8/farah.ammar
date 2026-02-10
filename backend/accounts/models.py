@@ -1,5 +1,5 @@
 """
-Accounts app: Custom User and Address models for Nana's Bites.
+Accounts app: Custom User and Address models for Chef Farah Ammar.
 User uses email as USERNAME_FIELD; role customer/admin; optional soft delete.
 """
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin

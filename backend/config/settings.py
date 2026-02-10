@@ -1,5 +1,5 @@
 """
-Django settings for Nana's Bites backend.
+Django settings for Chef Farah Ammar backend.
 Production-ready; use environment variables for secrets.
 """
 import os

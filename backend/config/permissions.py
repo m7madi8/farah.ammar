@@ -1,5 +1,5 @@
 """
-Custom permission classes for Nana's Bites API.
+Custom permission classes for Chef Farah Ammar API.
 Use role-based admin check (User.role in ('admin', 'super_admin')).
 """
 from rest_framework import permissions

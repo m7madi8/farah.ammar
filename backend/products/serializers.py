@@ -72,19 +72,24 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    """Lightweight product list (e.g. for catalog); optional hero image."""
+    """Lightweight product list (e.g. for catalog); optional hero image and primary category slug for filtering."""
     hero_image = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = (
             'id', 'slug', 'name_en', 'name_ar', 'price', 'discount_price',
-            'currency', 'stock_quantity', 'is_active', 'hero_image',
+            'currency', 'stock_quantity', 'is_active', 'hero_image', 'category',
         )
 
     def get_hero_image(self, obj):
         hero = obj.images.filter(is_hero=True).first()
         return ProductImageSerializer(hero).data if hero else None
+
+    def get_category(self, obj):
+        link = obj.product_category_links.order_by('-is_primary').first()
+        return link.category.slug if link else None
 
 
 class InventoryLogSerializer(serializers.ModelSerializer):

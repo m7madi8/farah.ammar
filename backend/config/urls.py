@@ -1,5 +1,5 @@
 """
-Nana's Bites — URL configuration.
+Chef Farah Ammar — URL configuration.
 API under /api/: auth, products, orders (incl. cart, checkout, webhook, coupon).
 Admin: custom dashboard at /admin/ (admin/super_admin only).
 """
