@@ -12,12 +12,13 @@ export function Hero() {
       <div className="hero-bg" />
       <div className="hero-content">
         <img
-          src="/img/logo.png"
+          src="/img/logo.webp"
           alt="Chef Farah Ammar"
           className="hero-logo anim-fade-up"
           width="400"
           height="200"
           decoding="async"
+          fetchPriority="high"
         />
         <p className="hero-tagline anim-fade-up">{t('hero.tagline')}</p>
         <a href="#product" className="hero-cta anim-fade-up">

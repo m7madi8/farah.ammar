@@ -14,10 +14,10 @@
 │   ├── cart.js             # السلة والدفع
 │   └── dashboard.js        # لوحة التحكم والطلبات
 ├── img/                    # الصور
-│   ├── logo.png, logo1.png, 1.png, 2.png
-│   ├── teriyaki.jpeg, soya.jpeg, buffalo.jpeg
-│   ├── sweet-chili.jpeg, chop-sticks.jpeg
-│   └── (أضف logo2.png للمعاينة عند المشاركة إن رغبت)
+│   ├── logo.webp, logo1.webp, 1.webp, 2.webp
+│   ├── teriyaki.webp, soya.webp, buffalo.webp
+│   ├── sweet-chili.webp, chop-sticks.webp
+│   └── (أضف logo2.webp للمعاينة عند المشاركة إن رغبت)
 ├── pages/                  # الصفحات الداخلية
 │   ├── checkout.html       # تأكيد الطلب (دفع عند الاستلام)
 │   ├── dashboard.html      # لوحة التحكم

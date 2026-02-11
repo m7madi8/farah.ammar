@@ -45,8 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=50, blank=True)
     preferred_lang = models.CharField(max_length=2, choices=LANG_CHOICES, default='en')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='customer')
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)  # type: ignore[reportArgumentType]
+    is_staff = models.BooleanField(default=False)  # type: ignore[reportArgumentType]
     email_verified_at = models.DateTimeField(null=True, blank=True)
     last_login_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -57,7 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']
 
-    class Meta:
+    class Meta:  # type: ignore[reportIncompatibleVariableOverride]
         ordering = ['-created_at']
         verbose_name = 'User'
         verbose_name_plural = 'Users'
@@ -65,8 +65,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             models.UniqueConstraint(fields=['email'], name='accounts_user_email_unique'),
         ]
 
-    def __str__(self):
-        return self.email
+    def __str__(self) -> str:
+        return str(self.email)
 
 
 class Address(models.Model):
@@ -89,7 +89,7 @@ class Address(models.Model):
     state_region = models.CharField(max_length=100, blank=True)
     postal_code = models.CharField(max_length=20, blank=True)
     country = models.CharField(max_length=2, default='IL')
-    is_default = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=False)  # type: ignore[reportArgumentType]
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

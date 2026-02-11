@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.utils import timezone
-from config.admin import admin_site
 from .models import Coupon, Order, OrderItem, Payment
 
 
@@ -16,7 +15,6 @@ class PaymentInline(admin.TabularInline):
     extra = 0
 
 
-@admin_site.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):
     list_display = (
         'code', 'discount_type', 'discount_value', 'uses_count', 'max_uses',
@@ -29,7 +27,6 @@ class CouponAdmin(admin.ModelAdmin):
     readonly_fields = ('uses_count', 'created_at', 'updated_at')
 
 
-@admin_site.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'public_id', 'customer_name', 'customer_phone', 'status', 'total',
@@ -47,8 +44,14 @@ class OrderAdmin(admin.ModelAdmin):
     )
 
 
-@admin_site.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('order', 'provider', 'status', 'amount', 'external_id', 'created_at')
     list_filter = ('provider', 'status')
     search_fields = ('order__public_id', 'external_id')
+
+
+# Register with custom admin site (after it's fully loaded to avoid circular import)
+from config.admin import admin_site
+admin_site.register(Coupon, CouponAdmin)
+admin_site.register(Order, OrderAdmin)
+admin_site.register(Payment, PaymentAdmin)

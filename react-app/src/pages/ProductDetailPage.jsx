@@ -83,6 +83,7 @@ export function ProductDetailPage({ cartOpen, onCartOpen, setCartOpen }) {
                 width="1200"
                 height="750"
                 decoding="async"
+                fetchPriority="high"
               />
             </picture>
           </div>

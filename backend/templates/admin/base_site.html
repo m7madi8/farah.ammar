@@ -4,10 +4,29 @@
 {% block title %}{% trans "Chef Farah Ammar" %}{% endblock %}
 
 {% block extrahead %}
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
+  /* Hide "Skip to main content" link */
+  .skip-to-content-link {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
   @media (max-width: 768px) {
     .dashboard-analytics div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+    #header, #branding { padding-left: 10px; padding-right: 10px; }
+    #content { padding: 10px !important; }
+  }
+  @media (max-width: 480px) {
+    #header, #branding { padding-left: 8px; padding-right: 8px; }
+    #content { padding: 8px !important; }
+    #site-name { font-size: 1.1rem !important; }
   }
 </style>
 {% endblock %}

@@ -16,58 +16,57 @@ class NanaBitesAdminSite(AdminSite):
     site_header = "Chef Farah Ammar"
     site_title = "Chef Farah Ammar"
     index_title = "لوحة التحكم"
+    index_template = 'admin/dashboard_index.html'
 
     def get_analytics(self):
-        """Aggregate stats for dashboard: sales, best-sellers, active orders, coupons."""
-        from orders.models import Order, OrderItem, Coupon
-
-        now = timezone.now()
-        # Sales totals (paid/delivered/shipped/processing count as revenue)
-        revenue_statuses = ['paid', 'processing', 'shipped', 'delivered']
-        qs_revenue = Order.objects.filter(status__in=revenue_statuses)
-        total_sales_all = qs_revenue.aggregate(s=Sum('total'))['s'] or Decimal('0')
-        # Daily: today
-        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        daily = Order.objects.filter(
-            status__in=revenue_statuses,
-            created_at__gte=today_start,
-        ).aggregate(s=Sum('total'))['s'] or Decimal('0')
-        # Weekly: last 7 days
-        from datetime import timedelta
-        week_start = now - timedelta(days=7)
-        weekly = Order.objects.filter(
-            status__in=revenue_statuses,
-            created_at__gte=week_start,
-        ).aggregate(s=Sum('total'))['s'] or Decimal('0')
-        # Monthly: this month
-        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        monthly = Order.objects.filter(
-            status__in=revenue_statuses,
-            created_at__gte=month_start,
-        ).aggregate(s=Sum('total'))['s'] or Decimal('0')
-        # Active orders (pending, confirmed, paid, processing, shipped — not cancelled/refunded/delivered)
-        active_statuses = ['pending', 'confirmed', 'paid', 'processing', 'shipped']
-        active_orders_count = Order.objects.filter(status__in=active_statuses).count()
-        # Best-selling products (by quantity sold from order items)
-        best_sellers = (
-            OrderItem.objects.filter(order__status__in=revenue_statuses)
-            .values('product_id', 'product__name_en')
-            .annotate(total_qty=Sum('quantity'))
-            .order_by('-total_qty')[:10]
-        )
-        # Coupons usage: total uses_count across active coupons + count of orders with coupon
-        coupons_used = Coupon.objects.aggregate(s=Sum('uses_count'))['s'] or 0
-        orders_with_coupon = Order.objects.filter(coupon__isnull=False).count()
-        return {
-            'total_sales_all': total_sales_all,
-            'sales_daily': daily,
-            'sales_weekly': weekly,
-            'sales_monthly': monthly,
-            'active_orders_count': active_orders_count,
-            'best_sellers': list(best_sellers),
-            'coupons_uses_total': coupons_used,
-            'orders_with_coupon': orders_with_coupon,
-        }
+        """Aggregate stats for dashboard: sales, best-sellers, active orders, coupons. Returns None on error."""
+        try:
+            from orders.models import Order, OrderItem, Coupon
+        except Exception:
+            return None
+        try:
+            now = timezone.now()
+            revenue_statuses = ['paid', 'processing', 'shipped', 'delivered']
+            qs_revenue = Order.objects.filter(status__in=revenue_statuses)
+            total_sales_all = qs_revenue.aggregate(s=Sum('total'))['s'] or Decimal('0')
+            today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            daily = Order.objects.filter(
+                status__in=revenue_statuses,
+                created_at__gte=today_start,
+            ).aggregate(s=Sum('total'))['s'] or Decimal('0')
+            from datetime import timedelta
+            week_start = now - timedelta(days=7)
+            weekly = Order.objects.filter(
+                status__in=revenue_statuses,
+                created_at__gte=week_start,
+            ).aggregate(s=Sum('total'))['s'] or Decimal('0')
+            month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            monthly = Order.objects.filter(
+                status__in=revenue_statuses,
+                created_at__gte=month_start,
+            ).aggregate(s=Sum('total'))['s'] or Decimal('0')
+            active_statuses = ['pending', 'confirmed', 'paid', 'processing', 'shipped']
+            active_orders_count = Order.objects.filter(status__in=active_statuses).count()
+            best_sellers = (
+                OrderItem.objects.filter(order__status__in=revenue_statuses)
+                .values('product_id', 'product__name_en')
+                .annotate(total_qty=Sum('quantity'))
+                .order_by('-total_qty')[:10]
+            )
+            coupons_used = Coupon.objects.aggregate(s=Sum('uses_count'))['s'] or 0
+            orders_with_coupon = Order.objects.filter(coupon__isnull=False).count()
+            return {
+                'total_sales_all': total_sales_all,
+                'sales_daily': daily,
+                'sales_weekly': weekly,
+                'sales_monthly': monthly,
+                'active_orders_count': active_orders_count,
+                'best_sellers': list(best_sellers),
+                'coupons_uses_total': coupons_used,
+                'orders_with_coupon': orders_with_coupon,
+            }
+        except Exception:
+            return None
 
     @method_decorator(never_cache)
     def index(self, request, extra_context=None):
@@ -75,7 +74,9 @@ class NanaBitesAdminSite(AdminSite):
         if request.user.is_authenticated:
             role = getattr(request.user, 'role', None)
             if role in ('admin', 'super_admin') or request.user.is_superuser:
-                extra_context['analytics'] = self.get_analytics()
+                analytics = self.get_analytics()
+                if analytics is not None:
+                    extra_context['analytics'] = analytics
         return super().index(request, extra_context)
 
     def has_permission(self, request):

@@ -1,0 +1,329 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/login.css' %}">
+<style>
+  body.login {
+    background: linear-gradient(180deg, #4a3862 0%, #6b5785 40%, #8a7a9e 75%, #faf9f7 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 2rem;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  body.login #container {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+  }
+  body.login #header {
+    display: none;
+  }
+  body.login #content {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 0;
+    flex: 0 1 auto;
+  }
+  body.login #content-main {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+    padding: 2.5rem 2.25rem;
+  }
+  body.login #login-form {
+    margin-top: 0;
+  }
+  body.login .form-row {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  body.login .form-row label {
+    font-weight: 600;
+    color: #3d2d4a;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+  }
+  body.login .form-row input[type="text"],
+  body.login .form-row input[type="email"],
+  body.login .form-row input[type="password"] {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #e2dfe8;
+    border-radius: 12px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    background: #faf9f7;
+  }
+  body.login .form-row input:focus {
+    outline: none;
+    border-color: #7A5C8E;
+    box-shadow: 0 0 0 3px rgba(122, 92, 142, 0.12);
+    background: #fff;
+  }
+  body.login .submit-row {
+    margin-top: 1.75rem;
+    margin-bottom: 0;
+    padding: 0;
+  }
+  body.login .submit-row input[type="submit"] {
+    width: 100%;
+    padding: 0.9rem 1.5rem;
+    background: #4B2A63;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    font-family: inherit;
+  }
+  body.login .submit-row input[type="submit"]:hover {
+    background: #5c3a73;
+  }
+  body.login .submit-row input[type="submit"]:active {
+    transform: scale(0.99);
+  }
+  body.login .errornote {
+    background: #fff3f3;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+  }
+  body.login .password-reset-link {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  body.login .password-reset-link a {
+    color: #7A5C8E;
+    font-size: 0.9rem;
+  }
+  body.login .login-brand {
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  body.login .login-brand h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #3d2d4a;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  /* منع التمرير الأفقي على الشاشات الصغيرة */
+  body.login {
+    overflow-x: hidden;
+  }
+  body.login #content,
+  body.login #container {
+    max-width: 100%;
+  }
+  /* تابلت وشاشات صغيرة (768px وأقل) — توسيط الحاوية */
+  @media (max-width: 768px) {
+    body.login {
+      padding: 1.5rem;
+      min-height: 100vh;
+      min-height: 100dvh;
+      align-items: center;
+      justify-content: center;
+    }
+    body.login #container {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    body.login #content {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0;
+    }
+    body.login #content-main {
+      padding: 2rem 1.5rem;
+      border-radius: 18px;
+      margin: 0 auto;
+    }
+    body.login .login-brand h2 {
+      font-size: 1.3rem;
+    }
+  }
+  /* هواتف (480px وأقل) — توسيط في المنتصف */
+  @media (max-width: 480px) {
+    body.login {
+      padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+      align-items: center;
+      justify-content: center;
+    }
+    body.login #container,
+    body.login #content {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    body.login #content-main {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    body.login #content-main {
+      padding: 1.5rem 1.25rem;
+      border-radius: 16px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+    }
+    body.login .form-row {
+      margin-bottom: 1.25rem;
+    }
+    body.login .form-row label {
+      font-size: 0.9rem;
+    }
+    body.login .form-row input[type="text"],
+    body.login .form-row input[type="email"],
+    body.login .form-row input[type="password"] {
+      padding: 0.75rem 1rem;
+      min-height: 44px;
+      font-size: 16px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    body.login .login-brand {
+      margin-bottom: 1.35rem;
+    }
+    body.login .login-brand h2 {
+      font-size: 1.15rem;
+      line-height: 1.4;
+    }
+    body.login .submit-row {
+      margin-top: 1.5rem;
+    }
+    body.login .submit-row input[type="submit"] {
+      padding: 0.85rem 1.25rem;
+      min-height: 48px;
+      font-size: 1rem;
+    }
+    body.login .errornote {
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+    }
+    body.login .password-reset-link a {
+      font-size: 0.85rem;
+    }
+  }
+  /* هواتف صغيرة جداً (360px وأقل) */
+  @media (max-width: 360px) {
+    body.login {
+      padding: max(0.5rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
+      align-items: center;
+      justify-content: center;
+    }
+    body.login #container,
+    body.login #content,
+    body.login #content-main {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    body.login #content-main {
+      padding: 1.25rem 1rem;
+      border-radius: 14px;
+    }
+    body.login .login-brand h2 {
+      font-size: 1.05rem;
+    }
+    body.login .form-row input[type="text"],
+    body.login .form-row input[type="email"],
+    body.login .form-row input[type="password"] {
+      padding: 0.65rem 0.9rem;
+    }
+  }
+  /* تحسين اللمس على الهواتف */
+  @media (hover: none) and (pointer: coarse) {
+    body.login .form-row input:focus,
+    body.login .submit-row input[type="submit"]:active {
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+</style>
+{{ form.media }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block nav-sidebar %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block nav-breadcrumbs %}{% endblock %}
+
+{% block content %}
+{% if form.errors and not form.non_field_errors %}
+<p class="errornote">
+{% blocktranslate count counter=form.errors.items|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktranslate %}
+</p>
+{% endif %}
+
+{% if form.non_field_errors %}
+{% for error in form.non_field_errors %}
+<p class="errornote">{{ error }}</p>
+{% endfor %}
+{% endif %}
+
+<div id="content-main">
+  <div class="login-brand">
+    <h2>{% trans "Chef Farah Ammar" %} — {% trans "Log in" %}</h2>
+  </div>
+
+  {% if user.is_authenticated %}
+  <p class="errornote">
+  {% blocktranslate trimmed %}
+    You are authenticated as {{ username }}, but are not authorized to
+    access this page. Would you like to login to a different account?
+  {% endblocktranslate %}
+  </p>
+  {% endif %}
+
+  <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+    <div class="form-row">
+      {{ form.username.errors }}
+      <label for="id_username">{% trans "Email address" %}</label>
+      {{ form.username }}
+    </div>
+    <div class="form-row">
+      {{ form.password.errors }}
+      <label for="id_password">{% trans "Password" %}</label>
+      {{ form.password }}
+      <input type="hidden" name="next" value="{{ next }}">
+    </div>
+    {% url 'admin_password_reset' as password_reset_url %}
+    {% if password_reset_url %}
+    <div class="password-reset-link">
+      <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
+    </div>
+    {% endif %}
+    <div class="submit-row">
+      <input type="submit" value="{% translate 'Log in' %}">
+    </div>
+  </form>
+</div>
+{% endblock %}

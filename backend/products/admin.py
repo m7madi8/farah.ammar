@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from config.admin import admin_site
 from .models import Category, Product, ProductImage, ProductCategory, InventoryLog
 
 
@@ -49,7 +48,6 @@ class ProductImageInline(admin.TabularInline):
     extra = 0
 
 
-@admin_site.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('slug', 'name_en', 'sort_order', 'is_active', 'created_at')
     list_filter = ('is_active',)
@@ -57,7 +55,6 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name_en',)}
 
 
-@admin_site.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
         'slug', 'name_en', 'sku', 'price', 'stock_display', 'is_active', 'created_at',
@@ -77,7 +74,6 @@ class ProductAdmin(admin.ModelAdmin):
         return obj.stock_quantity
 
 
-@admin_site.register(InventoryLog)
 class InventoryLogAdmin(admin.ModelAdmin):
     list_display = ('product', 'change_qty', 'quantity_after', 'reason', 'reference_type', 'created_at')
     list_filter = ('reason',)
@@ -86,3 +82,10 @@ class InventoryLogAdmin(admin.ModelAdmin):
         'product', 'change_qty', 'quantity_after', 'reason',
         'reference_type', 'reference_id', 'notes', 'created_at', 'created_by',
     )
+
+
+# Register with custom admin site (after it's fully loaded to avoid circular import)
+from config.admin import admin_site
+admin_site.register(Category, CategoryAdmin)
+admin_site.register(Product, ProductAdmin)
+admin_site.register(InventoryLog, InventoryLogAdmin)

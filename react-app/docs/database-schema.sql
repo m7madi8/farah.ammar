@@ -103,7 +103,7 @@ COMMENT ON TABLE product_categories IS 'Product–category many-to-many; is_prim
 CREATE TABLE product_images (
   id         BIGSERIAL PRIMARY KEY,
   product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  url        VARCHAR(1024) NOT NULL,               -- full URL or path, e.g. /img/1.png
+  url        VARCHAR(1024) NOT NULL,               -- full URL or path, e.g. /img/1.webp
   alt_en     VARCHAR(255),
   alt_ar     VARCHAR(255),
   sort_order INT NOT NULL DEFAULT 0,

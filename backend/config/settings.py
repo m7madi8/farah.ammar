@@ -33,6 +33,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'config.middleware.SecurityHeadersMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,6 +85,31 @@ else:
     }
 
 AUTH_USER_MODEL = 'accounts.User'
+
+# ---------- Strong password validation (high security) ----------
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {'min_length': 10}},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
+
+# ---------- Session hardening ----------
+SESSION_COOKIE_AGE = int(os.environ.get('SESSION_COOKIE_AGE', '7200'))  # 2 hours
+SESSION_SAVE_EVERY_REQUEST = True  # extend session on each request
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# ---------- Cache (for login lockout and general use) ----------
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'nanas-bites-default',
+    },
+}
+
+# Login lockout: max failed attempts and lockout duration (seconds)
+LOGIN_FAILED_MAX_ATTEMPTS = int(os.environ.get('LOGIN_FAILED_MAX_ATTEMPTS', '5'))
+LOGIN_LOCKOUT_DURATION = int(os.environ.get('LOGIN_LOCKOUT_DURATION', '900'))  # 15 min
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -146,6 +172,16 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False  # False so JS can read for API if needed; use SameSite
 CSRF_COOKIE_SAMESITE = 'Lax'
 
+# HSTS (enable only behind HTTPS; set SECURE_HSTS_SECONDS=31536000 for 1 year)
+_hsts = os.environ.get('SECURE_HSTS_SECONDS', '')
+SECURE_HSTS_SECONDS = int(_hsts) if _hsts.isdigit() else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = SECURE_HSTS_SECONDS > 0
+SECURE_HSTS_PRELOAD = SECURE_HSTS_SECONDS > 0
+
+# Request size limits (reduce DoS risk)
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get('DATA_UPLOAD_MAX_MEMORY_SIZE', '2621440'))  # 2.5 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get('FILE_UPLOAD_MAX_MEMORY_SIZE', '5242880'))  # 5 MB
+
 # Password hashing: Django default PBKDF2 (strong); do not log or store plain passwords
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -207,6 +243,7 @@ LOGGING = {
     'loggers': {
         'django.request': {'level': 'WARNING'},
         'django.security': {'level': 'WARNING'},
+        'security': {'level': 'WARNING', 'propagate': False},
         'orders': {'level': LOG_LEVEL},
         'products': {'level': LOG_LEVEL},
     },

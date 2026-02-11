@@ -29,7 +29,7 @@ const mockProduct = {
   descriptionAr: 'دامبلنغ دجاج.',
   price: 25,
   category: 'boxes',
-  imageUrl: '/img/1.png',
+  imageUrl: '/img/1.webp',
   order: 1,
   badge: 'Signature',
 };

@@ -1,9 +1,12 @@
 """
 Serializers for registration and login.
 Structured for React frontend consumption.
+High security: password validation via AUTH_PASSWORD_VALIDATORS.
 """
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 from .models import Address
 
@@ -26,9 +29,9 @@ class AddressSerializer(serializers.ModelSerializer):
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """
     Registration: email, password, full_name (required); phone, preferred_lang optional.
-    Passwords are write-only; no password in response.
+    Passwords validated with AUTH_PASSWORD_VALIDATORS (min length 10, complexity).
     """
-    password = serializers.CharField(write_only=True, min_length=8, style={'input_type': 'password'})
+    password = serializers.CharField(write_only=True, min_length=10, style={'input_type': 'password'})
 
     class Meta:
         model = User
@@ -46,6 +49,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'email': {'required': True},
             'full_name': {'required': True},
         }
+
+    def validate_password(self, value):
+        try:
+            validate_password(value, self.instance)
+        except DjangoValidationError as e:
+            raise serializers.ValidationError(list(e.messages))
+        return value
 
     def create(self, validated_data):
         password = validated_data.pop('password')

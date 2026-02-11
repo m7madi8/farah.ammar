@@ -8,7 +8,7 @@ export function PageLoader({ visible }) {
     <div className="page-loader" id="pageLoader">
       <div className="loader-inner">
         <img
-          src="/img/logo.png"
+          src="/img/logo.webp"
           alt="Chef Farah Ammar"
           className="loader-logo"
           width="220"
