@@ -8,6 +8,7 @@ import { Hero } from '../components/Hero';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { ProductCard } from '../components/ProductCard';
+import { SwipeIcon } from '../components/SwipeIcon';
 import { CartPanel } from '../components/CartPanel';
 import { CartToast } from '../components/CartToast';
 import { CookieConsent } from '../components/CookieConsent';
@@ -74,7 +75,10 @@ export function HomePage({ onCartOpen, cartOpen, setCartOpen }) {
               <h2 className="shop-title">{t('shop.title')}</h2>
               <p className="shop-sub">{t('shop.sub')}</p>
             </header>
-            <p className="shop-swipe-hint">{t('shop.swipeHint')}</p>
+            <div className="shop-swipe-hint-wrap">
+              <p className="shop-swipe-hint">{t('shop.swipeHint')}</p>
+              <SwipeIcon className="shop-swipe-icon" width={48} height={48} />
+            </div>
             <div className="shop-grid">
               {shopList.map((product) => (
                 <ProductCard
