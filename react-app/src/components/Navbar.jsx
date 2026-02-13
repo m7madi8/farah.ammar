@@ -13,17 +13,26 @@ export function Navbar({ onCartClick, showCart = true, backToShop = false, alway
   const { itemCount } = useCart();
   const navRef = useRef(null);
 
-  // Show header background when scrolled (nav-scrolled class), or always on checkout/product pages
+  // Show header background when scrolled (nav-scrolled class), or always on checkout/product pages.
+  // Throttled with requestAnimationFrame to avoid scroll lag on mobile.
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
+    let ticking = false;
     const update = () => {
       const show = alwaysShowBackground || window.scrollY > 60;
       nav.classList.toggle('nav-scrolled', show);
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
     };
     update();
-    window.addEventListener('scroll', update);
-    return () => window.removeEventListener('scroll', update);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, [alwaysShowBackground]);
 
   return (
