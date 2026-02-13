@@ -18,7 +18,7 @@ export function Hero() {
           width="400"
           height="200"
           decoding="async"
-          fetchPriority="high"
+          fetchpriority="high"
         />
         <p className="hero-tagline anim-fade-up">{t('hero.tagline')}</p>
         <a href="#product" className="hero-cta anim-fade-up">
